@@ -1,0 +1,6 @@
+<html>
+not found! Supported apps:
+{% for app in supported %}
+	<div><a href="/{{ escape(app) }}">{{ escape(app) }}</a></div>
+{% end %}
+</html>
