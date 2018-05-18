@@ -10,24 +10,33 @@ import random
 import datetime
 from operator import attrgetter, itemgetter
 
-supportedApps = ["app1", "game2"]
+supportedApps = ["app1", "sirma"]
+restrictedApps = ["sirma"]
 
-class MainHandler(tornado.web.RequestHandler):
-    def get(self, gid=None):
-        self.render("index.html", gid=gid)
+handlers = map(lambda x: __import__("%s.handlers" % x, fromlist="get_app"), supportedApps)
+# from app1.handlers import get_app
+# import app1.handlers as asdf
+# asdf.get_app()
+# print handlers[0].get_app
 
 class DefaultHandler(tornado.web.RequestHandler):
     def get(self, path=""):
-        self.render("404.html", path=path, supported=supportedApps)
- 
+        if path:
+            publicApps = filter(lambda x: x not in restrictedApps, supportedApps)
+            self.render("404.html", path=path, supported=publicApps)
+        else:
+            self.render("home.html", path=path, supported=supportedApps)
+
 def main():
-    settings = dict(template_path="html", static_path="static", debug=True)
+    
     
     rules = []
-    for appName in supportedApps:
-        app = tornado.web.Application([(r"/%s(.*)" % appName, MainHandler)], **settings)
+    for i, appName in enumerate(supportedApps):
+    #     app = tornado.web.Application([(r"/%s(.*)" % appName, MainHandler)], **settings)
+        app = handlers[i].get_app()
         rules.append(Rule(PathMatches("/%s.*" % appName), app))
 
+    settings = dict(template_path="html", static_path="static", debug=True)
     app = tornado.web.Application([(r"/(.*)", DefaultHandler)], **settings)
     rules.append(Rule(PathMatches(r"/.*"), app))
     router = RuleRouter(rules)
