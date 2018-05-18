@@ -13,11 +13,7 @@ from operator import attrgetter, itemgetter
 supportedApps = ["app1", "sirma"]
 restrictedApps = ["sirma"]
 
-handlers = map(lambda x: __import__("%s.handlers" % x, fromlist="get_app"), supportedApps)
-# from app1.handlers import get_app
-# import app1.handlers as asdf
-# asdf.get_app()
-# print handlers[0].get_app
+handlers = list(map(lambda x: __import__("%s.handlers" % x, fromlist="get_app"), supportedApps))
 
 class DefaultHandler(tornado.web.RequestHandler):
     def get(self, path=""):
@@ -28,11 +24,8 @@ class DefaultHandler(tornado.web.RequestHandler):
             self.render("home.html", path=path, supported=supportedApps)
 
 def main():
-    
-    
     rules = []
     for i, appName in enumerate(supportedApps):
-    #     app = tornado.web.Application([(r"/%s(.*)" % appName, MainHandler)], **settings)
         app = handlers[i].get_app()
         rules.append(Rule(PathMatches("/%s.*" % appName), app))
 
