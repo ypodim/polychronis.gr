@@ -11,8 +11,8 @@ from operator import attrgetter, itemgetter
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self, gid=None):
-    	self.write("ok")
-        # self.render("index.html")
+    	# self.write("ok")
+        self.render("index.html")
  
 def main():
     settings = dict(template_path="html", static_path="static", debug=True)
