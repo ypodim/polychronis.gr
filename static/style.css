@@ -1,0 +1,70 @@
+
+div#top {
+    position:absolute;
+    left:0; right:0; top:0;
+    height: 30px;
+    padding: 10 0 0 15;
+    /*margin-bottom: 10px;*/
+    border-bottom: 1px solid gray;
+}
+div#side {
+    position:absolute;
+    left:0; top:50px; bottom: 0;
+    width: 135px;
+    margin-left: 15px;
+}
+div#main {
+    position: absolute;
+    left:150px; top:50px; right:0; bottom:0;
+}
+
+div#job-answer {
+    background-color: yellow;
+    padding: 0 10 0 10;
+    text-align: center;
+}
+div.job-badge {
+    padding: 10 10 10 0;
+}
+
+.inline {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+body {
+    font-size: 20px;
+}
+li {
+    list-style-type: none;
+    padding-bottom: 15px;
+}
+a {
+    text-decoration: none;
+}
+
+@media (max-width: 1125px) { /*max-device-width: 812px*/
+    div#wrapper {
+        width: 400px;
+    }
+
+    div#header {
+        height: 93px;
+        position: relative;
+    }
+
+    div#header h1 {
+        font-size: 140%;
+    }
+
+    #content {
+        float: none;
+        width: 100%;
+    }
+
+    #navigation {
+        float:none;
+        width: auto;
+    }
+}
+

@@ -10,13 +10,17 @@ import random
 import datetime
 from operator import attrgetter, itemgetter
 
-supportedApps = ["app1", "sirma"]
+# https://www.a2hosting.com/web-hosting
+# https://www.hostwinds.com/vps/linux
+
+supportedApps = ["app1", "sirma", "job"]
 restrictedApps = ["sirma"]
 
 handlers = list(map(lambda x: __import__("%s.handlers" % x, fromlist="get_app"), supportedApps))
 
 class DefaultHandler(tornado.web.RequestHandler):
     def get(self, path=""):
+        print("path is -%s-" % path)
         if path:
             publicApps = filter(lambda x: x not in restrictedApps, supportedApps)
             self.render("404.html", path=path, supported=publicApps)
@@ -29,16 +33,15 @@ def main():
         app = handlers[i].get_app()
         rules.append(Rule(PathMatches("/%s.*" % appName), app))
 
+    # Default app
     settings = dict(template_path="html", static_path="static", debug=True)
-    app = tornado.web.Application([(r"/(.*)", DefaultHandler)], **settings)
+    app = tornado.web.Application([
+        (r"/(.*)", DefaultHandler),
+        (r'/favicon.ico', tornado.web.StaticFileHandler),
+        (r'/static/', tornado.web.StaticFileHandler),
+    ], **settings)
     rules.append(Rule(PathMatches(r"/.*"), app))
     router = RuleRouter(rules)
-
-    # application = tornado.web.Application([
-    #     (r"/(.*)", MainHandler),
-    #     # (r'/favicon.ico', tornado.web.StaticFileHandler),
-    #     (r'/static/', tornado.web.StaticFileHandler),
-    # ], **settings)
 
     http_server = tornado.httpserver.HTTPServer(router)
     port = int(os.environ.get("PORT", 5000))

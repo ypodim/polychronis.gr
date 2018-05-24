@@ -1,0 +1,24 @@
+<html>
+<link rel="stylesheet" type="text/css" href="/static/style.css" />
+<head>
+	<title>{% block title %}Default title{% end %}</title>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-2011459-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-2011459-1');
+</script>
+<script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
+</head>
+
+<div id="top"><a href="/">polychronis.gr</a></div>
+<div id="side">
+	<li>one</li>
+	<li>two</li>
+	<li><a href="/job">job</a></li>
+</div>
+<div id="main">{% block main %}main{% end %}</div>
+</html>
