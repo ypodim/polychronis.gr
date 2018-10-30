@@ -13,6 +13,7 @@ from operator import attrgetter, itemgetter
 # https://www.a2hosting.com/web-hosting
 # https://www.hostwinds.com/vps/linux
 
+
 supportedApps = ["app1", "sirma", "job"]
 restrictedApps = ["sirma"]
 
