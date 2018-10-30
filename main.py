@@ -14,7 +14,7 @@ from operator import attrgetter, itemgetter
 # https://www.hostwinds.com/vps/linux
 
 
-supportedApps = ["app1", "sirma", "job"]
+supportedApps = ["multiplication", "sirma", "job"]
 restrictedApps = ["sirma"]
 
 handlers = list(map(lambda x: __import__("%s.handlers" % x, fromlist="get_app"), supportedApps))
