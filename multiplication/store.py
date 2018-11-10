@@ -1,5 +1,5 @@
 import random
-from anna import Multiplication
+from multiplication.anna import Multiplication
 
 def randomKey(length=5):
   return ''.join(random.choice("abcdefghijklmnopqrstuvwxyz0123456789") for i in range(length))
