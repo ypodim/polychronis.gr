@@ -1,0 +1,149 @@
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+function decodeHtml(html) {
+  var txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  return txt.value;
+}
+
+function Quiz(quizKey) {
+  this.quizKey = quizKey;
+  this.questions = null;
+  this.questionIndex = 0;
+  this.operation = "x";
+  
+  var that = this;
+  
+  this.fetchQuestion = function(qKey) {
+    $("#currentQuestion").html(that.questionIndex+1);
+    $.get("/multiplication/data/"+that.quizKey+"/"+qKey, function(data){
+      that.render(qKey, data);
+    })
+  }
+  this.fetchQuestions = function() {
+    $.get("/multiplication/data/"+that.quizKey, function(data){
+      that.questions = data.qKeys;
+      that.operation = data.operation;
+      $("#totalQuestions").html(data.qKeys.length);
+      that.fetchQuestion(that.questions[0]);
+    })
+  }
+  this.fetchResults = function() {
+    $.get("/multiplication/data/"+that.quizKey, function(data){
+      for (var qKey in data.stats) {
+        var secs = parseFloat(Math.round(data.stats[qKey].time * 100) / 100).toFixed(1);
+        $("#time"+qKey).html(secs+"secs");
+        if (data.stats[qKey].success) {
+          $("#"+qKey).addClass("correct");
+        } else {
+          $("#"+qKey).addClass("wrong");
+        }
+      }
+      $("#newGame").show();
+    })
+  }
+
+  this.submit = function(qKey, response) {
+    data = {"response":response};
+    
+    $.post( "/multiplication/data/"+this.quizKey+"/"+qKey, data, function( data ) {
+      var done = (that.questionIndex >= that.questions.length - 1);
+      if (done) {
+        console.log("you're done!")
+        that.fetchResults();
+      } else {
+        that.questionIndex += 1;
+        that.fetchQuestion(that.questions[that.questionIndex]);
+      }
+    });
+  }
+  this.render = function(qKey, data) {
+    var x1 = data.x1;
+    var x2 = data.x2;
+    var response = data.response;
+
+    var ui = $("<div></div>").attr("class", "question").attr("id",qKey);
+    ui.append($("<div></div>").addClass("alignRight").html(x1));
+    var x2div = $("<div style='border-bottom: 1px solid black; margin-bottom: 5px'></div>").addClass("alignRight");
+    x2div.append($("<span style='float: left'></span>").html(this.operation));
+    x2div.append($("<div id='x2'></div>").html(x2));
+    ui.append(x2div);
+    var input = $("<input type='text' id='response' autofocus='' />").val(response);
+    input.css("width", "100px");
+    input.keypress(function(event) {
+      if (event.charCode != 13) return;
+      if ($(this).val() == "") return;
+      $(this).attr('readonly', true);
+      var response = $(this).val();
+      that.submit(qKey, response);
+    });
+    ui.append(input);
+    ui.append($("<div></div>").attr("id","time"+qKey).addClass("time"));
+    $("#quiz").append(ui);
+    
+    if (response) {
+      input.attr('readonly', true);
+      this.questionIndex += 1;
+      if (this.questionIndex < this.questions.length)
+        this.fetchQuestion(this.questions[this.questionIndex]);
+      else
+        this.fetchResults();
+    } else {
+      input.focus();
+    }
+  }
+}
+
+$(document).ready(function(){
+  var bits = window.location.pathname.split('/');
+  var quizKey = bits[3];
+  var q = new Quiz(quizKey);
+  q.fetchQuestions();
+})
+</script>
+<style>
+body {
+  font  : 21px sans-serif;
+  padding : 5px;
+  margin  : 0;
+  background : #aaa;
+}
+input { 
+  text-align: right; 
+  font-size: 22px;
+}
+.correct {
+  background-color: #5BC85B;
+}
+.wrong {
+  background-color: pink;
+}
+.time {
+  margin-top: 10px;
+}
+.alignRight {
+  text-align: right;
+}
+.question {
+  display: inline-block;
+  padding: 20px;
+  font-size: 24px;
+  border: 1px solid black;
+}
+div#progress {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+#newGame {
+  display: none;
+}
+</style>
+
+</head>
+<div id=quiz></div>
+<a id="newGame" href="/multiplication">new game</a>
+<div id="progress"><span id="currentQuestion"></span>/<span id="totalQuestions"></span></div>
+</html>
