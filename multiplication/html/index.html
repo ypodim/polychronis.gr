@@ -1,20 +1,52 @@
 <html>
-
 <head>
+<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<!-- <script src="/js/my.js"></script> -->
 <script>
-Q = {};
-Q.keys = ["1 1", "32 3", "4 4"];
 $(document).ready(function(){
-	$("#newGame").click(function() {
-		console.log("clicked");
-	});
+  $("#newGame").submit(function(data){
+    $.post("/multiplication/game/", $(this).serialize(), function(data) {
+      window.location.href = "/multiplication/game/" + data.quizKey;
+    });
+    event.preventDefault();
+    return false;
+  });
+  
 })
 </script>
+<style>
+body {
+  font  : 21px sans-serif;
+  padding : 2em;
+  margin  : 0;
+  background : #aaa;
+}
+</style>
 
 </head>
 <div>Hello, Anna! Let's do this!</div>
-<button id="newGame">Start new game</button>
-<div id=quiz></div>
+<form id="newGame" action="/multiplication/game" class="pure-form pure-form-aligned">
+  <div class="pure-control-group">
+    <label for="questions">How many questions? </label>
+    <input id="questions" type="text" name="questions" value="8">
+  </div>
+  <div class="pure-control-group">
+    <label for="digits">How many digits? </label>
+    <input id="digits" type="text" name="digits" value="3">
+  </div>
+  <div class="pure-controls">
+    <label for="addition" class="pure-radio">
+      <input type="radio" id="addition" name="operation" value="addition" checked>
+      Addition
+    </label>
+    <label for="multiplication" class="pure-radio">
+      <input type="radio" id="multiplication" name="operation" value="multiplication">
+      Multiplication
+    </label>
+  <div class="pure-controls">
+    <button type="submit" class="pure-button pure-button-primary">Start new game</button>
+  </div>
+</form>
+
+
 </html>
