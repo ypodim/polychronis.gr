@@ -1,5 +1,5 @@
 import tornado.web
-from store import Store
+from multiplication.store import Store
 
 class DefaultHandler(tornado.web.RequestHandler):
   def initialize(self, store):
