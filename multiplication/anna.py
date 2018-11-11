@@ -42,7 +42,7 @@ class Multiplication:
     return self.formatQuestionStat(questionKey)
 
   def getQuestionKeys(self):
-    return self.quiz.keys()
+    return list(self.quiz.keys())
   def getQuiz(self):
     return self.quiz
 

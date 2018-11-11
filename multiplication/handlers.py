@@ -11,11 +11,10 @@ class MainHandler(DefaultHandler):
 
 class QuizDataHandler(DefaultHandler):
   def get(self, quizKey):
-    self.store.get(quizKey).getStats()
     quiz = self.store.get(quizKey)
     self.write(dict(qKeys=quiz.getQuestionKeys(), 
                     operation=quiz.getOperation(), 
-                    stats=self.store.get(quizKey).getStats()))
+                    stats=quiz.getStats()))
 
 class QuestionDataHandler(DefaultHandler):
   def get(self, quizKey, qKey):
