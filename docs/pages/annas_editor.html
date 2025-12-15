@@ -3,6 +3,12 @@ layout: naked
 #title: anna's editor
 ---
 <style>
+#result > div {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: red;
+  display: inline-block;
+}
 #input {
   height: 70px;
   background: #f5f5f5;
@@ -16,20 +22,26 @@ layout: naked
 [placeholder]:empty:focus::before {
     content: "";
 }
+#token { margin: 5px; }
 </style>
 
-<div id="one">one</div>
-
+<input id="token" value=""></input>
+<div>input</div>
 <div id="input" placeholder="type something here..." contenteditable="true"></div>
-
+<div>output</div>
+<div id="result"></div>
 
 <script>
 $(document).ready(function() {
-  $("#one").text("yes!");
   $("#input").on("input", function(arg){
     var element = $(this);
-    $.post("https://node.polychronis.gr/data", function(resp){
-      console.log(resp);
+    var token = $("#token").val();
+
+    val = element.html();
+    data = {text: val, token: token};
+    $.post("https://node.polychronis.gr/a", data, function(resp){
+      // console.log(resp)
+      $("#result").html(resp.result);
     });
   });
   $("#input").focusout(function(){
