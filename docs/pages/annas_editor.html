@@ -1,0 +1,42 @@
+---
+layout: naked
+#title: anna's editor
+---
+<style>
+#input {
+  height: 70px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  padding: 5px;
+}
+[placeholder]:empty::before {
+    content: attr(placeholder);
+    color: #555;
+}
+[placeholder]:empty:focus::before {
+    content: "";
+}
+</style>
+
+<div id="one">one</div>
+
+<div id="input" placeholder="type something here..." contenteditable="true"></div>
+
+
+<script>
+$(document).ready(function() {
+  $("#one").text("yes!");
+  $("#input").on("input", function(arg){
+    var element = $(this);
+    $.post("https://node.polychronis.gr/data", function(resp){
+      console.log(resp);
+    });
+  });
+  $("#input").focusout(function(){
+    var element = $(this);
+    if (!element.text().replace(" ", "").length) {
+      element.empty();
+    }
+  });
+});
+</script>
